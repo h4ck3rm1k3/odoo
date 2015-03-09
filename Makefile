@@ -7,3 +7,7 @@ css: ${CSS_FILES}
 	sass -t expanded --compass --unix-newlines --sourcemap=none $< $@
 watch:
 	sass -t expanded --compass --unix-newlines --sourcemap=none --watch .:.
+
+
+test :
+	python convert_go.py
