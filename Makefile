@@ -11,3 +11,6 @@ watch:
 
 test :
 	python convert_go.py
+
+readmanifest : readmanifest.go
+	gccgo -g -o readmanifest readmanifest.go
