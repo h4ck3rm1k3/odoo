@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"encoding/json"
+	"encoding2/json"
+//	"encoding/xml"
 	"io/ioutil"
 	"reflect"
 )
+
 
 type Load struct {}
 
 type Manifest struct {
 	Application bool
-	//Author []string
 	Author interface{} // string or []string
 	AutoInstall bool `json:"auto_install"`
 	Category string
@@ -22,8 +23,8 @@ type Manifest struct {
 	DemoXML []string `json:"demo_xml"`
 	Depends []string
 	Description string
-	//ExternalDependancies	map[string][]string `json:"external_dependancies"`
-	//ExternalDependancies	map[string]interface{} `json:"external_dependancies"`
+	ExternalDependancies	map[string][]string `json:"external_dependencies"`
+	//ExternalDependancies	map[string][]interface{} `json:"external_dependancies"`
 	//ExternalDependancies	map[string]interface{} `json:"external_dependancies"`
 	//ExternalDependancies	interface{} `json:"external_dependancies"`
 	Icon string // relative file name
@@ -41,6 +42,17 @@ type Manifest struct {
 	Version string
 	Web bool
 	Website string
+}
+
+func DecodeDict(file []byte) {
+
+	var data map[string]interface {}
+	err := json.Unmarshal(file, &data)
+	if err != nil {
+		fmt.Printf("error:%v\n", err)
+		return
+	}
+	VisitJson(data)
 }
 
 func VisitJson(data map[string]interface {} ){
@@ -84,6 +96,27 @@ func VisitJson(data map[string]interface {} ){
 
 }
 
+func Emit(m Manifest) {
+	//for j,m := range m.ExternalDependancies{		fmt.Printf("Raw DEPS:%s %s:\n", j, m)	}	
+
+	output, err2 := json.MarshalIndent(m, "  ", "    ")
+	if err2 != nil {
+	 	fmt.Printf("error: %v\n", err2)
+	}
+	fmt.Printf("JSON:")
+	os.Stdout.Write(output)
+}
+
+// func EmitXML(m Manifest) {
+
+// 	output, err2 := xml.MarshalIndent(m, "  ", "    ")
+// 	if err2 != nil {
+// 	 	fmt.Printf("error: %v\n", err2)
+// 	}
+// 	fmt.Printf("XML:")
+// 	os.Stdout.Write(output)
+// }
+
 func VisitPackageContents(fn string)  {
 	fmt.Printf("Read: %v\n", fn)
 	file, e := ioutil.ReadFile(fn)
@@ -98,31 +131,17 @@ func VisitPackageContents(fn string)  {
 		fmt.Printf("error1:%v data:%s\n", err1, file)
 		return
 	}
-
-	////fmt.Printf("Raw:%s:\n", m)
-	//fmt.Printf("Raw DEPS:%s:\n", m.ExternalDependancies)
-
-	//if m.ExternalDependancies != nil {
+	fmt.Printf("Raw:%v:\n", m)
+	// //fmt.Printf("Raw DEPS:%s:\n", m.ExternalDependancies)
+	// if m.ExternalDependancies != nil {
 	// 	var r = reflect.TypeOf(m.ExternalDependancies)
-	//fmt.Printf("\tOther:%v\n", r)
-	//}
-
-	//for j,m := range m.ExternalDependancies{		fmt.Printf("Raw DEPS:%s %s:\n", j, m)	}	
-	// output, err2 := json.MarshalIndent(m, "  ", "    ")
-	// if err2 != nil {
-	// 	fmt.Printf("error: %v\n", err2)
+	// 	fmt.Printf("\tOther:%v\n", r)
 	// }
-	// fmt.Printf("JSON:")
-	// os.Stdout.Write(output)
 	
+	Emit(m);
+	//EmitXML(m);
 
-	var data map[string]interface {}
-	err := json.Unmarshal(file, &data)
-	if err != nil {
-		fmt.Printf("error:%v\n", err)
-		return
-	}
-	VisitJson(data)
+	//DecodeDict(file)
 }
 
 func VisitPackage(fp string, fi os.FileInfo, err error) error {
@@ -146,4 +165,5 @@ func VisitPackage(fp string, fi os.FileInfo, err error) error {
 
 func main() {
 	filepath.Walk(".", VisitPackage)
+	//VisitPackageContents("addons/auth_ldap/__openerp__.json")
 }
