@@ -17,11 +17,18 @@ type Manifest struct {
 	Application bool
 	Author interface{} // string or []string
 	AutoInstall bool `json:"auto_install"`
+	Active bool `json:"active"`
+	Bootstrap bool `json:"bootstrap"`
 	Category string
+	Url string
+	Complexity string
+	Certificate interface{} // string or bool
 	Data []string // array of file name
 	Demo []string // array of file names
 	DemoXML []string `json:"demo_xml"`
 	Depends []string
+	CSS []string
+	Images []string
 	Description string
 	ExternalDependancies	map[string][]string `json:"external_dependencies"`
 	//ExternalDependancies	map[string][]interface{} `json:"external_dependancies"`
@@ -32,6 +39,7 @@ type Manifest struct {
 	Installable interface {}//bool or string
 	License string
 	ModulePath string `json:"module_path"`
+	Maintainer string `json:"maintainer"`
 	Name string
 	PostLoad *Load `json:"post_load"`
 	Qweb []string
@@ -131,14 +139,16 @@ func VisitPackageContents(fn string)  {
 		fmt.Printf("error1:%v data:%s\n", err1, file)
 		return
 	}
-	fmt.Printf("Raw:%v:\n", m)
-	// //fmt.Printf("Raw DEPS:%s:\n", m.ExternalDependancies)
-	// if m.ExternalDependancies != nil {
+	//fmt.Printf("Raw:%v:\n", m)
+
+	
+	if m.ExternalDependancies != nil {
+		fmt.Printf("Raw DEPS:%s:\n", m.ExternalDependancies)
 	// 	var r = reflect.TypeOf(m.ExternalDependancies)
 	// 	fmt.Printf("\tOther:%v\n", r)
-	// }
+	}
 	
-	Emit(m);
+	//Emit(m);
 	//EmitXML(m);
 
 	//DecodeDict(file)
