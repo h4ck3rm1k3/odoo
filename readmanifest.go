@@ -8,6 +8,7 @@ import (
 //	"encoding/xml"
 	"io/ioutil"
 	"reflect"
+	"strings"
 )
 
 
@@ -126,12 +127,15 @@ func Emit(m Manifest) {
 // }
 
 func VisitPackageContents(fn string)  {
-	fmt.Printf("Read: %v\n", fn)
+	//fmt.Printf("Read: %v\n", fn)
 	file, e := ioutil.ReadFile(fn)
 	if e != nil {
 		fmt.Printf("File error: %v\n", e)
 		os.Exit(1)
 	}
+
+	list := strings.Split(filepath.Dir(fn),"/")
+	ftype := list[len(list)-1]
 
 	var m Manifest
 	err1 := json.Unmarshal(file, &m)
@@ -143,11 +147,17 @@ func VisitPackageContents(fn string)  {
 
 	
 	if m.ExternalDependancies != nil {
-		fmt.Printf("Raw DEPS:%s:\n", m.ExternalDependancies)
+		//fmt.Printf("Raw DEPS:%s:\n", m.ExternalDependancies)
 	// 	var r = reflect.TypeOf(m.ExternalDependancies)
 	// 	fmt.Printf("\tOther:%v\n", r)
 	}
 	
+	for _,v := range m.Data {
+
+		//fmt.Printf("data: %v %v\n", x, v)
+		VisitPackageDataFile(ftype, m.ModulePath + "/"+ v)
+	}
+
 	//Emit(m);
 	//EmitXML(m);
 
@@ -168,6 +178,7 @@ func VisitPackage(fp string, fi os.FileInfo, err error) error {
 		return err       // this is fatal.
 	}
 	if matched {
+				
 		VisitPackageContents(fp)
 	}
 	return nil

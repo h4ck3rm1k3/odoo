@@ -6,8 +6,8 @@ CSS_FILES=$(patsubst %.sass,%.css,${SASS_FILES})
 test2: readmanifest
 	./readmanifest
 
-readmanifest : readmanifest.go encoding2/json.o
-	gccgo-5 -L. -g -o readmanifest readmanifest.go encoding2/json.o
+readmanifest : readmanifest.go encoding2/json.o readdatafiles.go encoding2/xml.o
+	gccgo-5 -L. -g -o readmanifest readmanifest.go encoding2/json.o readdatafiles.go encoding2/xml.o
 
 encoding2/json.o : encoding2/json/decode.go \
 	encoding2/json/encode.go \
@@ -17,6 +17,9 @@ encoding2/json.o : encoding2/json/decode.go \
 	encoding2/json/stream.go \
 	encoding2/json/tags.go
 	gccgo-5 -g -c -o encoding2/json.o $^
+
+encoding2/xml.o : encoding2/xml/marshal.go encoding2/xml/read.go encoding2/xml/typeinfo.go encoding2/xml/xml.go
+	gccgo-5 -g -c -o encoding2/xml.o $^
 
 
 
