@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:group name="any">
+    <xs:sequence>
+      <xs:any processContents="skip"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="value">
+    <xs:complexType mixed="true">
+      <xs:attribute name="model"/>
+      <xs:attribute name="search"/>
+      <xs:attribute name="eval"/>
+      <xs:attribute name="type"/>
+      <xs:attribute name="file"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="function">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="value"/>
+        <xs:element ref="function"/>
+      </xs:choice>
+      <xs:attribute name="model" use="required"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="id"/>
+      <xs:attribute name="context"/>
+      <xs:attribute name="eval"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="workflow">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="value"/>
+      </xs:sequence>
+      <xs:attribute name="model" use="required"/>
+      <xs:attribute name="action" use="required"/>
+      <xs:attribute name="uid"/>
+      <xs:attribute name="context"/>
+      <xs:attribute name="ref"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="report">
+    <xs:complexType>
+      <xs:attribute name="id"/>
+      <xs:attribute name="string" use="required"/>
+      <xs:attribute name="model" use="required"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="report_type"/>
+      <xs:attribute name="multi"/>
+      <xs:attribute name="menu"/>
+      <xs:attribute name="keyword"/>
+      <xs:attribute name="rml"/>
+      <xs:attribute name="file"/>
+      <xs:attribute name="sxw"/>
+      <xs:attribute name="xml"/>
+      <xs:attribute name="xsl"/>
+      <xs:attribute name="parser"/>
+      <xs:attribute name="auto"/>
+      <xs:attribute name="header"/>
+      <xs:attribute name="webkit_header"/>
+      <xs:attribute name="attachment"/>
+      <xs:attribute name="attachment_use"/>
+      <xs:attribute name="groups"/>
+      <xs:attribute name="usage"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="field">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0">
+        <xs:element maxOccurs="unbounded" ref="value"/>
+        <xs:group maxOccurs="unbounded" ref="any"/>
+      </xs:choice>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="type">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="base64"/>
+            <xs:enumeration value="char"/>
+            <xs:enumeration value="file"/>
+            <xs:enumeration value="int"/>
+            <xs:enumeration value="float"/>
+            <xs:enumeration value="list"/>
+            <xs:enumeration value="tuple"/>
+            <xs:enumeration value="html"/>
+            <xs:enumeration value="xml"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="file"/>
+      <xs:attribute name="ref"/>
+      <xs:attribute name="eval"/>
+      <xs:attribute name="model"/>
+      <xs:attribute name="search"/>
+      <xs:attribute name="use"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="record">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="field"/>
+      </xs:sequence>
+      <xs:attribute name="id"/>
+      <xs:attribute name="forcecreate"/>
+      <xs:attribute name="model" use="required"/>
+      <xs:attribute name="context"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="template">
+    <xs:complexType mixed="true">
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="any"/>
+      <xs:attribute name="id"/>
+      <xs:attribute name="t-name"/>
+      <xs:attribute name="name"/>
+      <xs:attribute name="forcecreate"/>
+      <xs:attribute name="context"/>
+      <xs:attribute name="priority"/>
+      <xs:attribute name="inherit_id"/>
+      <xs:attribute name="primary">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="True"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="groups"/>
+      <xs:attribute name="active"/>
+      <xs:attribute name="customize_show"/>
+      <xs:attribute name="page">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="True"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="delete">
+    <xs:complexType>
+      <xs:attribute name="model" use="required"/>
+      <xs:attribute name="id"/>
+      <xs:attribute name="search"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menuitem">
+    <xs:complexType>
+      <xs:attribute name="id"/>
+      <xs:attribute name="name"/>
+      <xs:attribute name="parent"/>
+      <xs:attribute name="action"/>
+      <xs:attribute name="sequence"/>
+      <xs:attribute name="groups"/>
+      <xs:attribute name="icon"/>
+      <xs:attribute name="web_icon"/>
+      <xs:attribute name="web_icon_hover"/>
+      <xs:attribute name="string"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- TODO: remove these, useless -->
+  <xs:element name="assert">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="test"/>
+      </xs:sequence>
+      <xs:attribute name="model" use="required"/>
+      <xs:attribute name="search"/>
+      <xs:attribute name="count"/>
+      <xs:attribute name="string"/>
+      <xs:attribute name="id"/>
+      <xs:attribute name="context"/>
+      <xs:attribute name="severity"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="test">
+    <xs:complexType mixed="true">
+      <xs:attribute name="expr" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ir_set">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="field"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="url">
+    <xs:complexType>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="url" use="required"/>
+      <xs:attribute name="target"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="act_window">
+    <xs:complexType>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="res_model" use="required"/>
+      <xs:attribute name="domain"/>
+      <xs:attribute name="src_model"/>
+      <xs:attribute name="context"/>
+      <xs:attribute name="view_id"/>
+      <xs:attribute name="view_type"/>
+      <xs:attribute name="view_mode"/>
+      <xs:attribute name="multi"/>
+      <xs:attribute name="target"/>
+      <xs:attribute name="key2"/>
+      <xs:attribute name="groups"/>
+      <xs:attribute name="limit"/>
+      <xs:attribute name="usage"/>
+      <xs:attribute name="auto_refresh"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="data">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="menuitem"/>
+        <xs:element ref="record"/>
+        <xs:element ref="template"/>
+        <xs:element ref="delete"/>
+        <xs:element ref="act_window"/>
+        <xs:element ref="url"/>
+        <xs:element ref="assert"/>
+        <xs:element ref="report"/>
+        <xs:element ref="workflow"/>
+        <xs:element ref="function"/>
+        <xs:element ref="ir_set"/>
+      </xs:choice>
+      <xs:attribute name="noupdate"/>
+      <xs:attribute name="context"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="openerp">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="data"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
